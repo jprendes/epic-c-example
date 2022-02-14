@@ -1,6 +1,8 @@
 include(ExternalProject)
 include(cmake/utils.cmake)
 
+if ( NOT DEFINED COREMARK_DIR )
+
 ExternalProject_Add(coremark-src
     URL https://github.com/eembc/coremark/archive/refs/heads/main.zip
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/coremark-src
@@ -9,3 +11,5 @@ ExternalProject_Add(coremark-src
     INSTALL_COMMAND ""
 )
 get_project_prop(coremark-src SOURCE_DIR COREMARK_DIR)
+
+endif()
