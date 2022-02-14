@@ -32,6 +32,9 @@ target_sources(app PRIVATE
 target_link_options(app PRIVATE "-Wl,--emit-relocs,-T,${CMAKE_CURRENT_SOURCE_DIR}/app.lds")
 set_property(TARGET app APPEND PROPERTY LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/app.lds)
 
-add_custom_command(TARGET app POST_BUILD
-    COMMAND cd ${CMAKE_CURRENT_BINARY_DIR} && xxd -i app app.h
+add_custom_command(OUTPUT app.h
+    COMMAND xxd -i app app.h
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    MAIN_DEPENDENCY app
 )
+add_custom_target(app_h DEPENDS app.h)

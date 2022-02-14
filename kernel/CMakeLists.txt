@@ -9,7 +9,7 @@ target_sources(kernel PRIVATE
     util.c
 )
 
-add_dependencies(kernel epic-llvm app)
+add_dependencies(kernel epic-llvm app_h)
 
 target_include_directories(kernel PRIVATE
     kernel
