@@ -8,7 +8,7 @@
 
 // Example app: CoreMark.
 __attribute__ ((aligned(8))) const
-#include "cm.h"
+#include "app.h"
 
 int start() {
     // Arbitrary SRAM and Flash app addresses.
@@ -20,7 +20,7 @@ int start() {
     uint32_t sram_addr = 0x12340000;
     uint32_t flash_addr = 0x81234000;
 
-    const void* elf_data = cm; // App to load.
+    const void* elf_data = app; // App to load.
 
     // Simulate programming "Flash" with an app's ELF file contents.
     uint32_t entry = program_flash_with_elf(elf_data, flash_addr - SENTINEL);

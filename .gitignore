@@ -1,5 +1,2 @@
-/*.o
-/kernel
-/coremark
-/cm
-/cm.h
+/build
+/.cache
