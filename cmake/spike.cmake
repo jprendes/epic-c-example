@@ -1,21 +1,24 @@
 include(ExternalProject)
 include(ProcessorCount)
-include(cmake/utils.cmake)
 
-if ( NOT DEFINED SPIKE_DIR )
+if ( NOT SPIKE_DIR )
 
-    ProcessorCount(NPROC)
-    if(NPROC EQUAL 0)
-        set(NPROC 1)
-    endif()
+ProcessorCount(NPROC)
+if(NPROC EQUAL 0)
+    set(NPROC 1)
+endif()
 
-    ExternalProject_Add(spike
-        URL https://github.com/riscv-software-src/riscv-isa-sim/archive/refs/heads/master.zip
-        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/spike
-        CONFIGURE_COMMAND ../spike/configure
-        BUILD_COMMAND make -j${NPROC}
-        INSTALL_COMMAND ""
-    )
-    get_project_prop(spike BINARY_DIR SPIKE_DIR)
+ExternalProject_Add(spike
+    URL https://github.com/riscv-software-src/riscv-isa-sim/archive/refs/heads/master.zip
+    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/spike
+    CONFIGURE_COMMAND ../spike/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install
+    BUILD_COMMAND make -j${NPROC}
+    INSTALL_COMMAND make install
+)
+set(SPIKE_DIR ${CMAKE_CURRENT_BINARY_DIR}/install)
+
+else()
+
+add_custom_target(spike)
 
 endif()

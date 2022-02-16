@@ -20,5 +20,5 @@ add_subdirectory(app)
 add_subdirectory(kernel)
 
 add_test(NAME run_kernel
-    COMMAND ${SPIKE_DIR}/spike --isa=${ISA} -m0x00002000:0xFFFE000,0x10000000:0x70000000,0x80000000:0x80000000 ${CMAKE_CURRENT_BINARY_DIR}/kernel/kernel
+    COMMAND ${SPIKE_DIR}/bin/spike --isa=${ISA} -m0x00002000:0xFFFE000,0x10000000:0x70000000,0x80000000:0x80000000 ${CMAKE_CURRENT_BINARY_DIR}/kernel/kernel
 )

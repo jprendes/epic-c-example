@@ -1,7 +1,6 @@
 include(ExternalProject)
-include(cmake/utils.cmake)
 
-if ( NOT DEFINED LLVM_DIR )
+if ( NOT LLVM_DIR )
 
 ExternalProject_Add(epic-llvm
     URL https://github.com/lowRISC/llvm-project/archive/refs/heads/epic.zip
@@ -19,8 +18,12 @@ ExternalProject_Add(epic-llvm
         -DLLVM_APPEND_VC_REV=False
         -DLLVM_TARGETS_TO_BUILD=RISCV
         -DLLVM_ENABLE_PROJECTS=clang$<SEMICOLON>lld
-        -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/llvm
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/install
 )
-get_project_prop(epic-llvm INSTALL_DIR LLVM_DIR)
+set(LLVM_DIR ${CMAKE_CURRENT_BINARY_DIR}/install)
+
+else()
+
+add_custom_target(epic-llvm)
 
 endif()
