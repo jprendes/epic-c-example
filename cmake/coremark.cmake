@@ -9,6 +9,9 @@ ExternalProject_Add(coremark-src
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
+    USES_TERMINAL_CONFIGURE true
+    USES_TERMINAL_BUILD true
+    USES_TERMINAL_INSTALL true
 )
 set(COREMARK_DIR ${CMAKE_CURRENT_BINARY_DIR}/coremark-src/src)
 
