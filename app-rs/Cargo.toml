@@ -1,0 +1,19 @@
+[package]
+name = "app-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[profile.dev]
+debug           = true
+lto             = false
+opt-level       = 0
+panic           = "abort"
+
+[profile.release]
+codegen-units   = 1
+debug           = false
+lto             = true
+opt-level       = 's'
+panic           = "abort"

@@ -84,10 +84,34 @@ uint32_t program_flash_with_elf(const void *data, uint32_t flash_offset) {
 
     const Elf_Ehdr *eh = data;
 
+    print("ELF:\n");
+    print("  e_type      = "); print_u64(eh->e_type); print("\n");
+    print("  e_machine   = "); print_u64(eh->e_machine); print("\n");
+    print("  e_version   = "); print_u64(eh->e_version); print("\n");
+    print("  e_entry     = "); print_u64(eh->e_entry); print("\n");
+    print("  e_phoff     = "); print_u64(eh->e_phoff); print("\n");
+    print("  e_shoff     = "); print_u64(eh->e_shoff); print("\n");
+    print("  e_phentsize = "); print_u64(eh->e_phentsize); print("\n");
+    print("  e_phnum     = "); print_u64(eh->e_ph_num); print("\n");
+    print("  e_shentsize = "); print_u64(eh->e_shentsize); print("\n");
+    print("  e_shnum     = "); print_u64(eh->e_sh_num); print("\n");
+    print("  e_shstrndx  = "); print_u64(eh->e_shstrndx); print("\n");
+    print("\n");
+
     int ph_num = eh->e_ph_num;
     const Elf_Phdr *ph = data + eh->e_phoff;
 
-    for(int i = 0; i < ph_num-1; i++) {
+    for(int i = 0; i < ph_num; i++) {
+        print("PH["); print_u64(i); print("]:\n");
+        print("  p_type   = "); print_u64(ph[i].p_type); print("\n");
+        print("  p_offset = "); print_u64(ph[i].p_offset); print("\n");
+        print("  p_vaddr  = "); print_u64(ph[i].p_vaddr); print("\n");
+        print("  p_paddr  = "); print_u64(ph[i].p_paddr); print("\n");
+        print("  p_filesz = "); print_u64(ph[i].p_filesz); print("\n");
+        print("  p_memsz  = "); print_u64(ph[i].p_memsz); print("\n");
+        print("  p_align  = "); print_u64(ph[i].p_align); print("\n");
+        print("\n");
+        
         if(ph[i].p_type != PT_LOAD || ph[i].p_memsz == 0)
             continue;
         if((ph[i].p_paddr & SENTINEL) == 0)
@@ -111,9 +135,14 @@ rela_section_info rela_section(const void *data, int skip_sections) {
     const Elf_Ehdr *eh = data;
     const Elf_Shdr* sh = data + eh->e_shoff;
 
-    for(int i = skip_sections; i < eh->e_sh_num-1; i++) {
+    for(int i = skip_sections; i < eh->e_sh_num; i++) {
         if(sh[i].sh_type == SHT_RELA) {
             const Elf_Rela *rela = data + sh[i].sh_offset;
+
+            print("Found a relocation section");
+            if(rela->r_offset & SENTINEL)
+                print(" (in flash)");
+            print("\n");
 
             // We don't apply relocations in Flash (e.g. .rela.text)
             if(rela->r_offset & SENTINEL)

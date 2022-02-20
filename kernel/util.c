@@ -29,3 +29,36 @@ static unsigned strlen(const char* str) {
 void print(char *s) {
     syscall(SYS_write, 0, (uint32_t)s, (uint32_t)strlen(s), 0, 0, 0, 0);
 }
+
+void print_i64(int64_t n) {
+    if (n < 0) {
+        print("-");
+        print_u64(-n);
+    } else {
+        print_u64(n);
+    }
+}
+
+void print_u64(uint64_t n) {
+    static char const * const digits = "0123456789ABCDEF";
+    char str[sizeof(uint64_t) * 2 + 3];
+    int i = sizeof(str) - 1;
+
+    if (n == 0) {
+        print("0x0");
+        return;
+    }
+
+    str[i--] = '\0';
+
+    while (n) {
+        int t = n & 0x0F;
+        str[i--] = digits[t];
+        n = n >> 4;
+    }
+
+    str[i--] = 'x';
+    str[i] = '0';
+
+    print(str + i);
+}

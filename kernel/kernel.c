@@ -35,7 +35,7 @@ int start() {
     rela_section_info rela_info = rela_section(elf_data, 0);
     if (rela_info.offset == 0) {
         print("Failed find relocation section\n");
-        return 1;
+        //return 1;
     }
 
     // Put the relocation data in the format expected by the libtock-c crt0.

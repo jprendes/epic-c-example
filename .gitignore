@@ -1,2 +1,4 @@
 /build
 /.cache
+/app-rs/Cargo.lock
+/app-rs/target
