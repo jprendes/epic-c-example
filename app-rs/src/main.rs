@@ -4,6 +4,10 @@
 mod htif;
 
 static mut RESULT: u64 = 0x42;
+static mut RESULT_REF: &u64 = unsafe { &RESULT };
+
+static HELLO_WORLD: &str = "Hello World!";
+static HELLO_WORLD_REF: &&str = &HELLO_WORLD;
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
@@ -11,30 +15,30 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
 }
 
 #[no_mangle]
-#[inline(never)]
-pub extern "C" fn some_function() -> u64 {
-    unsafe {
-        (&RESULT as *const u64) as u64
-    }
-}
-
-#[no_mangle]
 pub extern "C" fn main() -> isize {
-    let res = htif::print("Hello World!\n");
-    unsafe {
-        htif::print("The `print` syscall result was ");
-        htif::print(RESULT);
+        htif::print("*HELLO_WORLD_REF = ");
+        htif::print(*HELLO_WORLD_REF);
+        htif::print("\n");
+        htif::print("Address of global HELLO_WORLD is ");
+        htif::print((&HELLO_WORLD as *const &str) as u64);
         htif::print(".\n");
-        core::ptr::write_volatile(&mut RESULT as *mut u64, res);
-        htif::print("Address of some mutable global is ");
-        htif::print(some_function());
+        htif::print("Address of global HELLO_WORLD_REF is ");
+        htif::print((&HELLO_WORLD_REF as *const &&str) as u64);
         htif::print(".\n");
-        htif::print("Address of some constant global is ");
-        htif::print(("Hello world!".as_ptr()) as u64);
-        htif::print(".\n");
-        htif::print("The `print` syscall result was ");
-        htif::print(RESULT);
-        htif::print(".\n");
-    }
+
+        unsafe {
+            htif::print("*RESULT_REF = ");
+            htif::print(*RESULT_REF);
+            htif::print("\n");
+            htif::print("Address of global RESULT is ");
+            htif::print((&RESULT as *const u64) as u64);
+            htif::print(".\n");
+            htif::print("Address of global RESULT_REF is ");
+            htif::print((&RESULT_REF as *const &u64) as u64);
+            htif::print(".\n");
+            htif::print("Content of global RESULT_REF is ");
+            htif::print((RESULT_REF as *const u64) as u64);
+            htif::print(".\n");
+        }
     0
 }
