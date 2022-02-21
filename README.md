@@ -4,10 +4,11 @@
 
 lowRISC is working on a specification and [prototype toolchain implementation](https://github.com/lowRISC/llvm-project/commits/epic) of an Embedded PIC (ePIC) ABI for RISC-V.
 
-This repository showcases how to use the work-in-progress ePIC toolchain implementation. It contains an example of how to create fully relocatable RISC-V apps that require only a simple runtime loader. To demonstrate the relocatability, the repository also contains a simple kernel that loads and relocates the example app.
+This repository showcases how to use the work-in-progress ePIC toolchain implementation. It contains two examples of how to create fully relocatable RISC-V apps that require only a simple runtime loader, one in C and one in Rust. To demonstrate the relocatability, the repository also contains a simple kernel that loads and relocates the example app.
 
 - The kernel has its entry point in `kernel.c`.
-- The current example loadable app is CoreMark.
+- The current example C loadable app is CoreMark.
+- The current example Rust loadable app is a hello world type of app.
 
 The example runs in spike (riscv-isa-sim) and simulates a system with both SRAM and Flash memory. The kernel image embeds the ELF files it will load at arbitrary addresses during system execution. The steps to load an app are:
 
@@ -20,13 +21,13 @@ The example runs in spike (riscv-isa-sim) and simulates a system with both SRAM 
 
 Build requirements:
 
-- spike (riscv-isa-sim)
 - xxd
 - LLVM build dependencies
 
 The dependencies may be built and installed manually or the provided [Dockerfile](Dockerfile) can be used to set up a container with the dependencies pre-installed.
 
-Use `make` to build and run everything.
+Use `cmake -DCMAKE_BUILD_TYPE=Release -B ./build -S .` to configure the project and `cmake --build ./build --parallel $(nproc)` to build everything.
+Use `cmake --build ./build --target test` to run the examples.
 
 The Clang/LLVM toolchain with ePIC support is automatically built as part of this example.
 
