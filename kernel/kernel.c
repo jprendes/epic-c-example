@@ -34,7 +34,7 @@ int start() {
     // assume that only one relocation section is needed (.rela.data).
     rela_section_info rela_info = rela_section(elf_data, 0);
     if (rela_info.offset == 0) {
-        print("Failed find relocation section\n");
+        print("Failed find data relocation section\n");
         //return 1;
     }
 

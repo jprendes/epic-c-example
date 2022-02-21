@@ -94,6 +94,13 @@ void load_from_flash(uint32_t app_start, uint32_t mem_start,
     // First, we get a pointer to the location of the address we need to fix.
     uint32_t* target = (uint32_t*)(rd->data[i] + mem_start);
     uint32_t addend = rd->data[i+2];
+#if defined(KERNEL_DEBUG)
+    print("Relocating address in ");
+    print_u64((uint64_t)target);
+    print(": ");
+    print_u64((uint64_t)*target);
+    print(" -> ");
+#endif
     if ((*target & 0x80000000) == 0) {
       // Again, we use our sentinel. If the address at that location has a MSB
       // of 0, then we know this is an address in RAM. We need to fix the
@@ -107,5 +114,9 @@ void load_from_flash(uint32_t app_start, uint32_t mem_start,
       // located in flash.
       *target = (*target ^ 0x80000000) + app_start;
     }
+#if defined(KERNEL_DEBUG)
+    print_u64((uint64_t)*target);
+    print("\n");
+#endif
   }
 }
