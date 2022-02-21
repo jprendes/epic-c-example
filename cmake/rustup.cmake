@@ -1,6 +1,6 @@
 include(ExternalProject)
 
-if ( NOT RUSTUP_HOME OR NOT CARGO_HOME )
+if ( NOT RUSTUP_DIR )
 
 set(RUSTUP_HOME ${CMAKE_CURRENT_BINARY_DIR}/install/.rustup)
 set(CARGO_HOME ${CMAKE_CURRENT_BINARY_DIR}/install/.cargo)
@@ -22,5 +22,9 @@ ExternalProject_Add(rustup
 else()
 
 add_custom_target(rustup)
+
+set(RUSTUP_HOME ${RUSTUP_DIR}/.rustup)
+set(CARGO_HOME ${RUSTUP_DIR}/.cargo)
+set(RUSTUP env RUSTUP_HOME=${RUSTUP_HOME} CARGO_HOME=${CARGO_HOME} PATH=${CARGO_HOME}/bin:$ENV{PATH})
 
 endif()
