@@ -2,21 +2,34 @@ include(ExternalProject)
 
 if ( NOT RUST_DIR )
 
+file(GENERATE OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/epic-rust.config.toml
+CONTENT 
+"
+[install]
+prefix=\"${CMAKE_CURRENT_BINARY_DIR}/install\"
+sysconfdir=\"etc\"
+
+[llvm]
+ninja=true
+targets=\"RISCV;X86\"
+experimental-targets=\"\"
+
+[target.x86_64-unknown-linux-gnu]
+cc=\"clang\"
+cxx=\"clang++\"
+"
+)
+
 ExternalProject_Add(epic-rust
-    GIT_REPOSITORY https://github.com/jprendes/rust.git
-    GIT_TAG master
-    GIT_SHALLOW true
-    GIT_PROGRESS true
+    URL https://github.com/jprendes/rust/releases/download/epic-rust/epic-rust-with-submodules.tar.gz
     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/rust
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND rm -f ./config.toml
         && ../epic-rust/x.py setup codegen
-        && echo >> ./config.toml
-        && echo [install] >> ./config.toml
-        && echo prefix="${CMAKE_CURRENT_BINARY_DIR}/install" >> ./config.toml
-        && echo sysconfdir="etc" >> ./config.toml
+        && cat ${CMAKE_CURRENT_BINARY_DIR}/epic-rust.config.toml >> ./config.toml
     BUILD_COMMAND ../epic-rust/x.py build
     INSTALL_COMMAND ../epic-rust/x.py install
+        && ../epic-rust/x.py install src
         && ${RUSTUP} rustup toolchain link epic ${CMAKE_CURRENT_BINARY_DIR}/install
     # USES_TERMINAL_CONFIGURE true # Setting this to true will result in x.py prompting if we want to install the git hooks
     USES_TERMINAL_BUILD true
