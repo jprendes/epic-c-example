@@ -10,11 +10,12 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/riscv32imc-unknown-none-el
         RUSTFLAGS=${RUSTFLAGS}
         cargo -v build --release -Zbuild-std=core
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Cargo.toml epic-llvm epic-rust rustup
+    MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/Cargo.toml
+    DEPENDS epic-llvm epic-rust rustup
     DEPFILE ${CMAKE_CURRENT_BINARY_DIR}/riscv32imc-unknown-none-elf/release/app-rs.d
     USES_TERMINAL
 )
-add_custom_target(app-rs DEPENDS riscv32imc-unknown-none-elf/release/app-rs)
+add_custom_target(app-rs DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/riscv32imc-unknown-none-elf/release/app-rs)
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/app.h
     COMMAND rm -f app
